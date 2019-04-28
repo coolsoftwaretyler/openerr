@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/ogdenstudios/openerr/issues"
   },
-  "homepage": "https://github.com/ogdenstudios/openerr#readme"
+  "homepage": "https://github.com/ogdenstudios/openerr#readme",
+  "dependencies": {
+    "axios": "^0.18.0"
+  }
 }
