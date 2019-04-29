@@ -45,8 +45,15 @@ function getIt(url, query) {
 // Tweet out the results 
 function startTweeting() {
     if (bills.length === 0) {
-        tweet("We didn't find any bill activity for yesterday. If you think this is an error, please DM us! For more information about the CO legislature, visit: https://leg.colorado.gov/");
+        var send = require('gmail-send')({
+        user: secrets.gmail_user,           // Your GMail account used to send emails
+        pass: secrets.gmail_password,           // Application-specific password
+        to:   'tyler@ogdenstudios.xyz',           // Send to yourself
+        subject: 'No bills posted today',
+        text:    'CO Openerr found no bills to tweet',  // Plain text
+        })({});                             // Send email without any check
     } else {
+        console.log("Got bills");
         for (i = 0;i < bills.length;i++) {
             var readMore = bills[i].openstatesURL ? "Read more at: " + bills[i].openstatesURL.toString() : '';
             var tweetText = `Colorado ${bills[i].identifier}: ${bills[i].title}. On ${bills[i].latestActionDate}, the following action was taken: ${bills[i].latestAction}. ${readMore}`;
@@ -111,3 +118,5 @@ exports.handler = function(event, context, callback) {
     getIt(url, openStatesQuery);
     callback(null, "Success from lambda");
 }
+
+getIt(url, openStatesQuery);
