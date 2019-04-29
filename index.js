@@ -42,8 +42,6 @@ function getIt(url, query) {
         });
 }
 
-getIt(url, openStatesQuery);
-
 // Tweet out the results 
 function startTweeting() {
     if (bills.length === 0) {
@@ -63,7 +61,7 @@ function tweet(status) {
             console.log(tweet);
         })
         .catch(function (error) {
-            throw error;
+            console.log(error);
         });
 }
 
@@ -106,4 +104,10 @@ function constructBillObject(data) {
         openstatesURL: data.node.openstatesUrl
     }
     return bill;
+}
+
+// AWS Lambda handler 
+exports.handler = function(event, context, callback) {
+    getIt(url, openStatesQuery);
+    callback(null, "Success from lambda");
 }
