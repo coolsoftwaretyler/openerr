@@ -46,12 +46,12 @@ function getIt(url, query) {
 function startTweeting() {
     if (bills.length === 0) {
         var send = require('gmail-send')({
-        user: secrets.gmail_user,           // Your GMail account used to send emails
-        pass: secrets.gmail_password,           // Application-specific password
-        to:   'tyler@ogdenstudios.xyz',           // Send to yourself
-        subject: 'No bills posted today',
-        text:    'CO Openerr found no bills to tweet',  // Plain text
-        })({});                             // Send email without any check
+            user: secrets.gmail_user,
+            pass: secrets.gmail_password,
+            to: 'tyler@ogdenstudios.xyz',
+            subject: 'No bills posted today',
+            text: 'CO Openerr found no bills to tweet',
+        })({});
     } else {
         console.log("Got bills");
         for (i = 0;i < bills.length;i++) {
@@ -114,9 +114,7 @@ function constructBillObject(data) {
 }
 
 // AWS Lambda handler 
-exports.handler = function(event, context, callback) {
+exports.handler = function (event, context, callback) {
     getIt(url, openStatesQuery);
     callback(null, "Success from lambda");
 }
-
-getIt(url, openStatesQuery);
