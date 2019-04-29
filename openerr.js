@@ -6,18 +6,13 @@ var Twitter = require('twitter');
 const url = "https://openstates.org/graphql";
 var today = new Date();
 bills = []
-
 var twitter = new Twitter({
     consumer_key: secrets.api_key,
     consumer_secret: secrets.api_secret_key,
     access_token_key: secrets.access_token,
     access_token_secret: secrets.access_token_secret
 });
-
-// For testing purposes. TODO: make sure we use the correct date
-var date = today.getFullYear() + '-0' + (today.getMonth() + 1) + '-' + (today.getDate() - 3);
-// TODO: use this one for the date.
-//var date = today.getFullYear() + '-0' + (today.getMonth() + 1) + '-' + today.getDate();
+var date = today.getFullYear() + '-0' + (today.getMonth() + 1) + '-' + today.getDate();
 var openStatesQuery = createOpenStatesQuery(date);
 
 function getIt(url, query) {
