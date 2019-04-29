@@ -1,11 +1,19 @@
 // Load dependencies 
 const axios = require('axios');
 const secrets = require("./secrets.json");
-
+var Twitter = require('twitter');
 // Set up constants and variables 
 const url = "https://openstates.org/graphql";
 var today = new Date();
 bills = []
+
+var twitter = new Twitter({
+    consumer_key: secrets.api_key,
+    consumer_secret: secrets.api_secret_key,
+    access_token_key: secrets.access_token,
+    access_token_secret: secrets.access_token_secret
+});
+
 // For testing purposes. TODO: make sure we use the correct date
 var date = today.getFullYear() + '-0' + (today.getMonth() + 1) + '-' + (today.getDate() - 8);
 // TODO: use this one for the date.
@@ -13,7 +21,7 @@ var date = today.getFullYear() + '-0' + (today.getMonth() + 1) + '-' + (today.ge
 var openStatesQuery = createOpenStatesQuery(date);
 
 function getIt(url, query) {
-    axios.get(url, { params: { query: query }, headers: {'X-API-KEY': secrets.openStatesKey } })
+    axios.get(url, { params: { query: query }, headers: { 'X-API-KEY': secrets.openStatesKey } })
         .then(function (response) {
             var hasNextPage = response.data.data.search.pageInfo.hasNextPage;
             var endCursor = response.data.data.search.pageInfo.endCursor;
@@ -39,7 +47,7 @@ function getIt(url, query) {
         });
 }
 
-//getIt(url, openStatesQuery);
+getIt(url, openStatesQuery);
 
 // Tweet out the results 
 function startTweeting() {
@@ -50,26 +58,19 @@ function startTweeting() {
             var readMore = bills[i].openstatesURL ? "Read more at: " + bills[i].openstatesURL.toString() : '';
             var tweetText = `Colorado ${bills[i].identifier}: ${bills[i].title}. On ${bills[i].latestActionDate}, the following action was taken: ${bills[i].latestAction}. ${readMore}`;
             console.log(tweetText);
-            axios.get(url, { params: { query: query }, headers: {'X-API-KEY': secrets.openStatesKey } })
         }
     }
 }
 
-function tweet(tweet) {
-    // Try this: https://developer.twitter.com/en/docs/basics/authentication/guides/authorizing-a-request
-    console.log("tweeting");
-    axios.post(
-        "https://api.twitter.com/1.1/statuses/update.json", { params: { status: tweet } }, { headers: {"Authorization" : `Bearer ${secrets.twitterToken}`} }
-    )
-    .then(function(response){
-        console.log(response.res);
-    })
-    .catch(function (error) {
-        console.log(error);
-    });
+function tweet(status) {
+    twitter.post('statuses/update', { status: status })
+        .then(function (tweet) {
+            console.log(tweet);
+        })
+        .catch(function (error) {
+            throw error;
+        });
 }
-
-tweet("Hello, world");
 
 // Open States Query constructor 
 function createOpenStatesQuery(date, cursor = null) {
