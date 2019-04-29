@@ -50,8 +50,8 @@ function startTweeting() {
         tweet("We didn't find any bill activity for yesterday. If you think this is an error, please DM us! For more information about the CO legislature, visit: https://leg.colorado.gov/");
     } else {
         for (i = 0;i < bills.length;i++) {
-            var readMore = bills[i].openstatesURL ? "More: " + bills[i].openstatesURL.toString() : '';
-            var tweetText = `Colorado ${bills[i].identifier}: ${bills[i].title}. ${bills[i].latestAction}. ${readMore}`;
+            var readMore = bills[i].openstatesURL ? "Read more at: " + bills[i].openstatesURL.toString() : '';
+            var tweetText = `Colorado ${bills[i].identifier}: ${bills[i].title}. On ${bills[i].latestActionDate}, the following action was taken: ${bills[i].latestAction}. ${readMore}`;
             tweet(tweetText);
         }
     }
