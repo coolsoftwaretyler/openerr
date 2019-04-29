@@ -12,7 +12,7 @@ var twitter = new Twitter({
     access_token_key: secrets.access_token,
     access_token_secret: secrets.access_token_secret
 });
-var date = today.getFullYear() + '-0' + (today.getMonth() + 1) + '-' + today.getDate();
+var date = today.getFullYear() + '-0' + (today.getMonth() + 1) + '-' + (today.getDate() - 1);
 var openStatesQuery = createOpenStatesQuery(date);
 
 function getIt(url, query) {
