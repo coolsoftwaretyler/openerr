@@ -10,7 +10,7 @@ var date = today.getFullYear()+'-0'+(today.getMonth()+1)+'-'+(today.getDate()-8)
 // TODO: use this one for the date.
 // var date = today.getFullYear()+'-0'+(today.getMonth()+1)+'-'+today.getDate();
 
-var openStatesQuery = '{search: bills(first: 100, jurisdiction: "Colorado", actionSince: "'+ date +'") {edges {node {id, title}}}}'
+var openStatesQuery = '{search: bills(first: 100, jurisdiction: "Colorado", actionSince: "'+ date +'") {edges {node {id, title, actions{description, date}}}}}'
 
 // Set the API Key header for all requests
 axios.defaults.headers.common['X-API-KEY'] = secrets.openStatesKey;
@@ -29,8 +29,12 @@ getIt();
 
 function process(data){
     responseData = data.data.search.edges;
-    console.log(responseData.length);
     for (i=0;i<responseData.length;i++) {
-        console.log(responseData[i]);
+        var title = responseData[i].node.title;
+        console.log(title);
+        var actions = responseData[i].node.actions;
+        for (j=0;j<actions.length;j++){
+            console.log(actions[j]);
+        }
     }
 }
