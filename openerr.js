@@ -15,7 +15,7 @@ var twitter = new Twitter({
 });
 
 // For testing purposes. TODO: make sure we use the correct date
-var date = today.getFullYear() + '-0' + (today.getMonth() + 1) + '-' + (today.getDate() - 8);
+var date = today.getFullYear() + '-0' + (today.getMonth() + 1) + '-' + (today.getDate() - 3);
 // TODO: use this one for the date.
 //var date = today.getFullYear() + '-0' + (today.getMonth() + 1) + '-' + today.getDate();
 var openStatesQuery = createOpenStatesQuery(date);
@@ -52,12 +52,12 @@ getIt(url, openStatesQuery);
 // Tweet out the results 
 function startTweeting() {
     if (bills.length === 0) {
-        console.log("No bills found");
+        tweet("We didn't find any bill activity for yesterday. If you think this is an error, please DM us! For more information about the CO legislature, visit: https://leg.colorado.gov/");
     } else {
         for (i = 0;i < bills.length;i++) {
             var readMore = bills[i].openstatesURL ? "Read more at: " + bills[i].openstatesURL.toString() : '';
             var tweetText = `Colorado ${bills[i].identifier}: ${bills[i].title}. On ${bills[i].latestActionDate}, the following action was taken: ${bills[i].latestAction}. ${readMore}`;
-            console.log(tweetText);
+            tweet(tweetText);
         }
     }
 }
