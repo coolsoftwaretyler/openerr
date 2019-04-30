@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "mocha",
-    "local": "node index.js local"
+    "local": "node index.js local",
+    "zip" : "zip -r ./openerr.zip *"
   },
   "repository": {
     "type": "git",
