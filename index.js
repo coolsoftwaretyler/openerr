@@ -26,7 +26,7 @@ function getIt(url, query, bills) {
                     bills.push(bill);
                 }
                 var newQuery = createOpenStatesQuery(date, endCursor);
-                getIt(url, newQuery, env);
+                getIt(url, newQuery, bills);
             } else {
                 var responseData = response.data.data.search.edges;
                 for (i = 0;i < responseData.length;i++) {
@@ -54,7 +54,7 @@ function startTweeting(bills, testing = false) {
         return false
     } else {
         for (i = 0;i < bills.length;i++) {
-            var readMore = bills[i].openstatesURL ? "Read more at: " + bills[i].openstatesUrl.toString() : '';
+            var readMore = bills[i].openstatesUrl ? "Read more at: " + bills[i].openstatesUrl.toString() : '';
             var tweetText = `Colorado ${bills[i].identifier}: ${bills[i].title}. On ${bills[i].latestActionDate}, the following action was taken: ${bills[i].latestAction}. ${readMore}`;
             if (testing) {
                 return bills
@@ -65,14 +65,19 @@ function startTweeting(bills, testing = false) {
     }
 }
 
-function tweet(status) {
-    twitter.post('statuses/update', { status: status })
-        .then(function (tweet) {
-            console.log(tweet);
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
+function tweet(status, env = 'test') {
+    if (env === 'production') {
+        console.log("red flag");
+        twitter.post('statuses/update', { status: status })
+            .then(function (tweet) {
+                console.log(tweet);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    } else {
+        console.log(status);
+    }
 }
 
 // Open States Query constructor 
@@ -137,4 +142,9 @@ exports.testCreateBillObject = function (data) {
 // Check that startTweeting works 
 exports.testStartTweeting = function (bills) {
     return startTweeting(bills, true)
+}
+
+// If we said to run it local, run it. 
+if (process.argv[2] === 'local'){
+    getIt(url, openStatesQuery, []);
 }
