@@ -62,15 +62,15 @@ function startTweeting() {
     }
 }
 
-function tweet(status) {
-    twitter.post('statuses/update', { status: status })
-        .then(function (tweet) {
-            console.log(tweet);
-        })
-        .catch(function (error) {
-            console.log(error);
-        });
-}
+// function tweet(status) {
+//     twitter.post('statuses/update', { status: status })
+//         .then(function (tweet) {
+//             console.log(tweet);
+//         })
+//         .catch(function (error) {
+//             console.log(error);
+//         });
+// }
 
 // Open States Query constructor 
 function createOpenStatesQuery(date, cursor = null) {
@@ -117,4 +117,9 @@ function constructBillObject(data) {
 exports.handler = function (event, context, callback) {
     getIt(url, openStatesQuery);
     callback(null, "Success from lambda");
+}
+
+// Test handler 
+exports.test = function(text){
+    return text
 }
