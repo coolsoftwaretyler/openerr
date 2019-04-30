@@ -51,13 +51,13 @@ function startTweeting(bills, testing = false) {
             subject: 'No bills posted today',
             text: 'CO Openerr found no bills to tweet',
         })({});
-        return false
+        return false;
     } else {
         for (i = 0;i < bills.length;i++) {
             var readMore = bills[i].openstatesUrl ? "Read more at: " + bills[i].openstatesUrl.toString() : '';
             var tweetText = `Colorado ${bills[i].identifier}: ${bills[i].title}. On ${bills[i].latestActionDate}, the following action was taken: ${bills[i].latestAction}. ${readMore}`;
             if (testing) {
-                return bills
+                return bills;
             } else {
                 tweet(tweetText);
             }
@@ -67,7 +67,6 @@ function startTweeting(bills, testing = false) {
 
 function tweet(status, env = 'test') {
     if (env === 'production') {
-        console.log("red flag");
         twitter.post('statuses/update', { status: status })
             .then(function (tweet) {
                 console.log(tweet);
@@ -123,8 +122,8 @@ function createBillObject(data) {
 
 // AWS Lambda handler 
 exports.handler = function (event, context, callback) {
-    console.log(event)
-    console.log(context)
+    console.log(event);
+    console.log(context);
     getIt(url, openStatesQuery, []);
     callback(null, "Success from lambda");
 }
@@ -143,7 +142,7 @@ exports.testCreateBillObject = function (data) {
 
 // Check that startTweeting works 
 exports.testStartTweeting = function (bills) {
-    return startTweeting(bills, true)
+    return startTweeting(bills, true);
 }
 
 // If we said to run it local, run it. 
