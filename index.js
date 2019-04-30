@@ -123,6 +123,8 @@ function createBillObject(data) {
 
 // AWS Lambda handler 
 exports.handler = function (event, context, callback) {
+    console.log(event)
+    console.log(context)
     getIt(url, openStatesQuery, []);
     callback(null, "Success from lambda");
 }
