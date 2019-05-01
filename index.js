@@ -4,16 +4,16 @@ const secrets = require("./secrets.json");
 var Twitter = require('twitter');
 // Set up constants and variables 
 const url = "https://openstates.org/graphql";
-var today = new Date();
 var twitter = new Twitter({
     consumer_key: secrets.api_key,
     consumer_secret: secrets.api_secret_key,
     access_token_key: secrets.access_token,
     access_token_secret: secrets.access_token_secret
 });
-var date = today.getFullYear() + '-0' + (today.getMonth() + 1) + '-' + (today.getDate() - 1);
+var d = new Date();
+d.setDate(d.getDate() - 1);
+var date = d.toISOString().split('T')[0];
 var openStatesQuery = createOpenStatesQuery(date);
-
 function getIt(url, query, bills) {
     axios.get(url, { params: { query: query }, headers: { 'X-API-KEY': secrets.openStatesKey } })
         .then(function (response) {
@@ -65,7 +65,7 @@ function startTweeting(bills, testing = false) {
     }
 }
 
-function tweet(status, env = 'test') {
+function tweet(status, env = 'production') {
     if (env === 'production') {
         twitter.post('statuses/update', { status: status })
             .then(function (tweet) {
