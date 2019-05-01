@@ -68,17 +68,15 @@ function startTweeting(bills, testing = false) {
 
 function tweet(status) {
     if (env === 'production') {
-        // twitter.post('statuses/update', { status: status })
-        //     .then(function (tweet) {
-        //         console.log(tweet);
-        //     })
-        //     .catch(function (error) {
-        //         console.log(error);
-        //     });
-        console.log("whoops, we sent tweets");
+        twitter.post('statuses/update', { status: status })
+            .then(function (tweet) {
+                console.log(tweet);
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     } else {
-        console.log("Good job, we didn't send the tweets");
-        //console.log(status);
+        console.log(status);
     }
 }
 
@@ -127,6 +125,7 @@ function createBillObject(data) {
 exports.handler = function (event, context, callback) {
     console.log(event);
     console.log(context);
+    env = 'production'
     getIt(url, openStatesQuery, []);
     callback(null, "Success from lambda");
 }
