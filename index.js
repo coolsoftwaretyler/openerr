@@ -4,6 +4,7 @@ const secrets = require("./secrets.json");
 var Twitter = require('twitter');
 // Set up constants and variables 
 const url = "https://openstates.org/graphql";
+var env = 'test';
 var twitter = new Twitter({
     consumer_key: secrets.api_key,
     consumer_secret: secrets.api_secret_key,
@@ -65,17 +66,19 @@ function startTweeting(bills, testing = false) {
     }
 }
 
-function tweet(status, env = 'production') {
+function tweet(status) {
     if (env === 'production') {
-        twitter.post('statuses/update', { status: status })
-            .then(function (tweet) {
-                console.log(tweet);
-            })
-            .catch(function (error) {
-                console.log(error);
-            });
+        // twitter.post('statuses/update', { status: status })
+        //     .then(function (tweet) {
+        //         console.log(tweet);
+        //     })
+        //     .catch(function (error) {
+        //         console.log(error);
+        //     });
+        console.log("whoops, we sent tweets");
     } else {
-        console.log(status);
+        console.log("Good job, we didn't send the tweets");
+        //console.log(status);
     }
 }
 
