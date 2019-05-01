@@ -2,9 +2,11 @@
   "name": "openerr",
   "version": "1.0.0",
   "description": "Colorado Openerr uses the Open States API to tweet about what is happening in Colorado state legislation.",
-  "main": "openerr.js",
+  "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha",
+    "local": "node index.js local",
+    "zip" : "zip -r ./openerr.zip *"
   },
   "repository": {
     "type": "git",
@@ -20,5 +22,8 @@
     "axios": "^0.18.0",
     "gmail-send": "^1.2.14",
     "twitter": "^1.7.1"
+  },
+  "devDependencies": {
+    "mocha": "^6.1.4"
   }
 }
