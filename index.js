@@ -1,9 +1,10 @@
 // Load dependencies
 const axios = require('axios');
+var https = require('https');
 const secrets = require('./secrets.json');
 var Twitter = require('twitter');
 // Set up constants and variables
-const url = 'https://openstates.org/graphql';
+const url = 'openstates.org';
 var env = 'test';
 var twitter = new Twitter({
   consumer_key: secrets.api_key,
@@ -15,6 +16,31 @@ var d = new Date();
 d.setDate(d.getDate() - 1);
 var date = d.toISOString().split('T')[0];
 var openStatesQuery = createOpenStatesQuery(date);
+var options = {
+  headers: {'X-API-KEY': secrets.openStatesKey},
+  host: url,
+  path: `/graphql/?query=${openStatesQuery}`
+};
+function getItNative() {
+  console.log(options);
+  var req = https.get(options, function(res) {
+    console.log('STATUS: ' + res.statusCode);
+    console.log('HEADERS: ' + JSON.stringify(res.headers));
+    // Buffer the body entirely for processing as a whole.
+    var bodyChunks = [];
+    res.on('data', function(chunk) {
+      // You can process streamed parts here...
+      bodyChunks.push(chunk);
+    }).on('end', function() {
+      var body = Buffer.concat(bodyChunks);
+      console.log('BODY: ' + body);
+      // ...and/or process the entire body here.
+    });
+  });
+  req.on('error', function(e) {
+    console.log('ERROR: ' + e.message);
+  });
+}
 function getIt(url, query, bills) {
   axios
     .get(url, {
@@ -110,7 +136,7 @@ function createOpenStatesQuery(date, cursor = null) {
             }
         }
     `;
-  return query;
+  return encodeURIComponent(query);
 }
 
 // Bill object constructor
@@ -153,5 +179,6 @@ exports.testStartTweeting = function(bills) {
 
 // If we said to run it local, run it.
 if (process.argv[2] === 'local') {
-  getIt(url, openStatesQuery, []);
+  // getIt(url, openStatesQuery, []);
+  getItNative(url, openStatesQuery);
 }
