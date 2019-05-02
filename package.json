@@ -6,7 +6,7 @@
   "scripts": {
     "test": "mocha",
     "local": "node index.js local",
-    "zip" : "zip -r ./openerr.zip *"
+    "zip": "zip -r ./openerr.zip *"
   },
   "repository": {
     "type": "git",
@@ -20,7 +20,6 @@
   "homepage": "https://github.com/ogdenstudios/openerr#readme",
   "dependencies": {
     "axios": "^0.18.0",
-    "gmail-send": "^1.2.14",
     "twitter": "^1.7.1"
   },
   "devDependencies": {

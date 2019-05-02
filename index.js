@@ -45,13 +45,7 @@ function getIt(url, query, bills) {
 // Tweet out the results 
 function startTweeting(bills, testing = false) {
     if (bills.length === 0) {
-        var send = require('gmail-send')({
-            user: secrets.gmail_user,
-            pass: secrets.gmail_password,
-            to: 'tyler@ogdenstudios.xyz',
-            subject: 'No bills posted today',
-            text: 'CO Openerr found no bills to tweet',
-        })({});
+        console.log('No bills found today');
         return false;
     } else {
         for (i = 0;i < bills.length;i++) {
