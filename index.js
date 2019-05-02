@@ -1,8 +1,6 @@
-// Load dependencies
 const secrets = require('./secrets.json');
 var https = require('https');
 var Twitter = require('twitter');
-// Set up constants and variables
 const url = 'openstates.org';
 var env = 'test';
 var twitter = new Twitter({
@@ -29,7 +27,6 @@ function getIt(query, bills) {
     var bodyChunks = [];
     res
       .on('data', function(chunk) {
-        // You can process streamed parts here...
         bodyChunks.push(chunk);
       })
       .on('end', function() {
@@ -135,7 +132,6 @@ function createBillObject(data) {
   return bill;
 }
 
-// AWS Lambda handler
 exports.handler = function(event, context, callback) {
   console.log(event);
   console.log(context);
@@ -144,25 +140,18 @@ exports.handler = function(event, context, callback) {
   callback(null, 'Success from lambda');
 };
 
-// Test exports
-
-// Check that open states queries get created correctly
 exports.testCreateOpenStatesQuery = function(date, cursor) {
   return createOpenStatesQuery(date, cursor).raw;
 };
 
-// Check that bill objects get created correctly
 exports.testCreateBillObject = function(data) {
   return createBillObject(data);
 };
 
-// Check that startTweeting works
 exports.testStartTweeting = function(bills) {
   return startTweeting(bills, true);
 };
 
-// If we said to run it local, run it.
 if (process.argv[2] === 'local') {
-  // getIt(url, openStatesQuery, []);
   getIt(openStatesQuery, []);
 }
