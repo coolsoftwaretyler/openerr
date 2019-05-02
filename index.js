@@ -1,7 +1,6 @@
 // Load dependencies
-const axios = require('axios');
-var https = require('https');
 const secrets = require('./secrets.json');
+var https = require('https');
 var Twitter = require('twitter');
 // Set up constants and variables
 const url = 'openstates.org';
@@ -16,59 +15,44 @@ var d = new Date();
 d.setDate(d.getDate() - 1);
 var date = d.toISOString().split('T')[0];
 var openStatesQuery = createOpenStatesQuery(date);
-var options = {
-  headers: {'X-API-KEY': secrets.openStatesKey},
-  host: url,
-  path: `/graphql/?query=${openStatesQuery}`
-};
-function getItNative() {
-  console.log(options);
+
+function getIt(query, bills) {
+  var options = {
+    headers: {'X-API-KEY': secrets.openStatesKey},
+    host: url,
+    path: `/graphql/?query=${query}`,
+  };
   var req = https.get(options, function(res) {
     console.log('STATUS: ' + res.statusCode);
     console.log('HEADERS: ' + JSON.stringify(res.headers));
     // Buffer the body entirely for processing as a whole.
     var bodyChunks = [];
-    res.on('data', function(chunk) {
-      // You can process streamed parts here...
-      bodyChunks.push(chunk);
-    }).on('end', function() {
-      var body = Buffer.concat(bodyChunks);
-      console.log('BODY: ' + body);
-      // ...and/or process the entire body here.
-    });
+    res
+      .on('data', function(chunk) {
+        // You can process streamed parts here...
+        bodyChunks.push(chunk);
+      })
+      .on('end', function() {
+        var body = Buffer.concat(bodyChunks);
+        var parsedBody = JSON.parse(body);
+        var hasNextPage = parsedBody.data.search.pageInfo.hasNextPage;
+        var endCursor = parsedBody.data.search.pageInfo.endCursor;
+        var responseData = parsedBody.data.search.edges;
+        for (i = 0; i < responseData.length; i++) {
+          bill = createBillObject(responseData[i]);
+          bills.push(bill);
+        }
+        if (hasNextPage) {
+          var newQuery = createOpenStatesQuery(date, endCursor);
+          getIt(newQuery, bills);
+        } else {
+          startTweeting(bills);
+        }
+      });
   });
   req.on('error', function(e) {
     console.log('ERROR: ' + e.message);
   });
-}
-function getIt(url, query, bills) {
-  axios
-    .get(url, {
-      params: {query: query},
-      headers: {'X-API-KEY': secrets.openStatesKey},
-    })
-    .then(function(response) {
-      var hasNextPage = response.data.data.search.pageInfo.hasNextPage;
-      var endCursor = response.data.data.search.pageInfo.endCursor;
-      var responseData = response.data.data.search.edges;
-      if (hasNextPage) {
-        for (i = 0; i < responseData.length; i++) {
-          bill = createBillObject(responseData[i]);
-          bills.push(bill);
-        }
-        var newQuery = createOpenStatesQuery(date, endCursor);
-        getIt(url, newQuery, bills);
-      } else {
-        for (i = 0; i < responseData.length; i++) {
-          bill = createBillObject(responseData[i]);
-          bills.push(bill);
-        }
-        startTweeting(bills);
-      }
-    })
-    .catch(function(error) {
-      console.log(error);
-    });
 }
 
 // Tweet out the results
@@ -180,5 +164,5 @@ exports.testStartTweeting = function(bills) {
 // If we said to run it local, run it.
 if (process.argv[2] === 'local') {
   // getIt(url, openStatesQuery, []);
-  getItNative(url, openStatesQuery);
+  getIt(openStatesQuery, []);
 }

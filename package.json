@@ -4,6 +4,7 @@
   "description": "Colorado Openerr uses the Open States API to tweet about what is happening in Colorado state legislation.",
   "main": "index.js",
   "scripts": {
+    "prettier": "./node_modules/.bin/prettier --single-quote --trailing-comma es5 --print-width 80 --write --no-bracket-spacing **/*.js",
     "pretest": "./node_modules/.bin/prettier --single-quote --trailing-comma es5 --print-width 80 --write --no-bracket-spacing **/*.js && eslint --ignore-path .gitignore .",
     "test": "mocha",
     "local": "node index.js local",
@@ -20,13 +21,12 @@
   },
   "homepage": "https://github.com/ogdenstudios/openerr#readme",
   "dependencies": {
-    "axios": "^0.18.0",
-    "prettier": "^1.17.0",
     "twitter": "^1.7.1"
   },
   "devDependencies": {
     "eslint": "^5.16.0",
     "eslint-config-strongloop": "^2.1.0",
-    "mocha": "^6.1.4"
+    "mocha": "^6.1.4",
+    "prettier": "^1.17.0"
   }
 }
