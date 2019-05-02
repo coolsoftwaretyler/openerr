@@ -4,7 +4,7 @@
   "description": "Colorado Openerr uses the Open States API to tweet about what is happening in Colorado state legislation.",
   "main": "index.js",
   "scripts": {
-    "pretest": "estlint --ignore-path .gitignore .",
+    "pretest": "eslint --ignore-path .gitignore .",
     "test": "mocha",
     "local": "node index.js local",
     "zip": "zip -r ./openerr.zip *"
