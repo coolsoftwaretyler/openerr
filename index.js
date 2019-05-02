@@ -1,18 +1,17 @@
-const secrets = require('./secrets.json');
-var https = require('https');
-var Twitter = require('twitter');
-const url = 'openstates.org';
+var d = new Date();
+var date = d.setDate(d.getDate() - 1).toISOString().split('T')[0];
 var env = 'test';
+var https = require('https');
+var openStatesQuery = createOpenStatesQuery(date);
+var secrets = require('./secrets.json');
+var Twitter = require('twitter');
 var twitter = new Twitter({
   consumer_key: secrets.api_key,
   consumer_secret: secrets.api_secret_key,
   access_token_key: secrets.access_token,
   access_token_secret: secrets.access_token_secret,
 });
-var d = new Date();
-d.setDate(d.getDate() - 1);
-var date = d.toISOString().split('T')[0];
-var openStatesQuery = createOpenStatesQuery(date);
+var url = 'openstates.org';
 
 function getIt(query, bills) {
   var options = {
@@ -23,7 +22,6 @@ function getIt(query, bills) {
   var req = https.get(options, function(res) {
     console.log('STATUS: ' + res.statusCode);
     console.log('HEADERS: ' + JSON.stringify(res.headers));
-    // Buffer the body entirely for processing as a whole.
     var bodyChunks = [];
     res
       .on('data', function(chunk) {
@@ -52,7 +50,6 @@ function getIt(query, bills) {
   });
 }
 
-// Tweet out the results
 function startTweeting(bills, testing = false) {
   if (bills.length === 0) {
     console.log('No bills found today');
@@ -89,7 +86,6 @@ function tweet(status) {
   }
 }
 
-// Open States Query constructor
 function createOpenStatesQuery(date, cursor = null) {
   var query = `
         {
@@ -120,7 +116,6 @@ function createOpenStatesQuery(date, cursor = null) {
   return encodeURIComponent(query);
 }
 
-// Bill object constructor
 function createBillObject(data) {
   bill = {
     identifier: data.node.identifier,
