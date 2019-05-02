@@ -1,8 +1,8 @@
-// Load dependencies 
+// Load dependencies
 const axios = require('axios');
 const secrets = require("./secrets.json");
 var Twitter = require('twitter');
-// Set up constants and variables 
+// Set up constants and variables
 const url = "https://openstates.org/graphql";
 var env = 'test';
 var twitter = new Twitter({
@@ -42,7 +42,7 @@ function getIt(url, query, bills) {
         });
 }
 
-// Tweet out the results 
+// Tweet out the results
 function startTweeting(bills, testing = false) {
     if (bills.length === 0) {
         console.log('No bills found today');
@@ -74,10 +74,10 @@ function tweet(status) {
     }
 }
 
-// Open States Query constructor 
+// Open States Query constructor
 function createOpenStatesQuery(date, cursor = null) {
     var query = `
-        { 
+        {
             search: bills(first:100, after:"${cursor ? cursor : ''}", jurisdiction: "Colorado", actionSince: "${date}") {
                 edges {
                     node {
@@ -103,7 +103,7 @@ function createOpenStatesQuery(date, cursor = null) {
     return query;
 }
 
-// Bill object constructor 
+// Bill object constructor
 function createBillObject(data) {
     bill = {
         identifier: data.node.identifier,
@@ -111,37 +111,37 @@ function createBillObject(data) {
         latestAction: data.node.actions[0].description,
         latestActionDate: data.node.actions[0].date.split("T")[0],
         openstatesUrl: data.node.openstatesUrl
-    }
+    };
     return bill;
 }
 
-// AWS Lambda handler 
+// AWS Lambda handler
 exports.handler = function (event, context, callback) {
     console.log(event);
     console.log(context);
-    env = 'production'
+    env = 'production';
     getIt(url, openStatesQuery, []);
     callback(null, "Success from lambda");
-}
+};
 
-// Test exports 
+// Test exports
 
 // Check that open states queries get created correctly
 exports.testCreateOpenStatesQuery = function (date, cursor) {
     return createOpenStatesQuery(date, cursor).raw;
-}
+};
 
-// Check that bill objects get created correctly 
+// Check that bill objects get created correctly
 exports.testCreateBillObject = function (data) {
     return createBillObject(data);
-}
+};
 
-// Check that startTweeting works 
+// Check that startTweeting works
 exports.testStartTweeting = function (bills) {
     return startTweeting(bills, true);
-}
+};
 
-// If we said to run it local, run it. 
-if (process.argv[2] === 'local'){
+// If we said to run it local, run it.
+if (process.argv[2] === 'local') {
     getIt(url, openStatesQuery, []);
 }
