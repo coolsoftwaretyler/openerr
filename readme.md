@@ -1,4 +1,4 @@
-# Colorado Openerr
+# Colorado Openerr v0.1.0
 
 [Colorado Openerr](https://twitter.com/openerr_co) uses the [Open States API](https://openstates.org/) to tweet about what is happening in Colorado state legislation.
 
