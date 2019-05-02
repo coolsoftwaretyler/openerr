@@ -4,9 +4,9 @@
 
 Built by [Ogden Studios](https://ogdenstudios.xyz). The best way to support this project is by giving money to [Open States](https://openstates.org/).
 
-## Secrets
+## Credentials
 
-You'll need your own Open States API key, Twitter API credentials, and Gmail credentials to run the script correctly. If you're interested in collaborating. If you want to contribute to the project but can't get those credentials, let me know and we can figure something out.
+If you plan to deploy your own version or modification of Openerr, you'll need your own [Open States API key](https://openstates.org/api/register/) and [Twitter API credentials](https://developer.twitter.com/en/docs/basics/getting-started).
 
 ## Tests
 
@@ -16,7 +16,7 @@ This won't be helpful in troubleshooting Twitter API issues, but it might be use
 
 ## Deploying to AWS Lambda
 
-This script is meant to be packaged up and deployed to AWS Lambda. If you want to create the `.zip` file for deployment, run `npm run zip`.
+This script is meant to be packaged up and deployed to AWS Lambda. If you want to create the `.zip` file for deployment, run `npm run zip`. Current builds are larger than 10mb and should be uploaded to an S3 bucket for lambda deployment.
 
 ## Code style
 
