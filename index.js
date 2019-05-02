@@ -1,5 +1,6 @@
 var d = new Date();
-var date = d.setDate(d.getDate() - 1).toISOString().split('T')[0];
+d.setDate(d.getDate() - 1);
+var date = d.toISOString().split('T')[0];
 var env = 'test';
 var https = require('https');
 var openStatesQuery = createOpenStatesQuery(date);
@@ -131,7 +132,7 @@ exports.handler = function(event, context, callback) {
   console.log(event);
   console.log(context);
   env = 'production';
-  getIt(url, openStatesQuery, []);
+  getIt(openStatesQuery, []);
   callback(null, 'Success from lambda');
 };
 
