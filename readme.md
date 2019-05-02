@@ -23,3 +23,7 @@ This script is meant to be packaged up and deployed to AWS Lambda. If you want t
 We use the `.editorconfig` and a modified `.eslintrc` from the [Node.js Style Guide](https://github.com/felixge/node-style-guide). The modified `.estlinrc` is only different in that it uses ES6.
 
 Running `npm pretest` will also run [Prettier](https://prettier.io/) with the correct settings to meet our ESLint config. This runs before `npm test` as well.
+
+## Versioning
+
+We use [semantic versioning](https://semver.org/).
