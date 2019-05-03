@@ -1,51 +1,56 @@
-// Load dependencies
-const axios = require('axios');
-const secrets = require('./secrets.json');
-var Twitter = require('twitter');
-// Set up constants and variables
-const url = 'https://openstates.org/graphql';
+var d = new Date();
+d.setDate(d.getDate() - 1);
+var date = d.toISOString().split('T')[0];
 var env = 'test';
+var https = require('https');
+var openStatesQuery = createOpenStatesQuery(date);
+var secrets = require('./secrets.json');
+var Twitter = require('twitter');
 var twitter = new Twitter({
   consumer_key: secrets.api_key,
   consumer_secret: secrets.api_secret_key,
   access_token_key: secrets.access_token,
   access_token_secret: secrets.access_token_secret,
 });
-var d = new Date();
-d.setDate(d.getDate() - 1);
-var date = d.toISOString().split('T')[0];
-var openStatesQuery = createOpenStatesQuery(date);
-function getIt(url, query, bills) {
-  axios
-    .get(url, {
-      params: {query: query},
-      headers: {'X-API-KEY': secrets.openStatesKey},
-    })
-    .then(function(response) {
-      var hasNextPage = response.data.data.search.pageInfo.hasNextPage;
-      var endCursor = response.data.data.search.pageInfo.endCursor;
-      var responseData = response.data.data.search.edges;
-      if (hasNextPage) {
+var url = 'openstates.org';
+
+function getIt(query, bills) {
+  var options = {
+    headers: {'X-API-KEY': secrets.openStatesKey},
+    host: url,
+    path: `/graphql/?query=${query}`,
+  };
+  var req = https.get(options, function(res) {
+    console.log('STATUS: ' + res.statusCode);
+    console.log('HEADERS: ' + JSON.stringify(res.headers));
+    var bodyChunks = [];
+    res
+      .on('data', function(chunk) {
+        bodyChunks.push(chunk);
+      })
+      .on('end', function() {
+        var body = Buffer.concat(bodyChunks);
+        var parsedBody = JSON.parse(body);
+        var hasNextPage = parsedBody.data.search.pageInfo.hasNextPage;
+        var endCursor = parsedBody.data.search.pageInfo.endCursor;
+        var responseData = parsedBody.data.search.edges;
         for (i = 0; i < responseData.length; i++) {
           bill = createBillObject(responseData[i]);
           bills.push(bill);
         }
-        var newQuery = createOpenStatesQuery(date, endCursor);
-        getIt(url, newQuery, bills);
-      } else {
-        for (i = 0; i < responseData.length; i++) {
-          bill = createBillObject(responseData[i]);
-          bills.push(bill);
+        if (hasNextPage) {
+          var newQuery = createOpenStatesQuery(date, endCursor);
+          getIt(newQuery, bills);
+        } else {
+          startTweeting(bills);
         }
-        startTweeting(bills);
-      }
-    })
-    .catch(function(error) {
-      console.log(error);
-    });
+      });
+  });
+  req.on('error', function(e) {
+    console.log('ERROR: ' + e.message);
+  });
 }
 
-// Tweet out the results
 function startTweeting(bills, testing = false) {
   if (bills.length === 0) {
     console.log('No bills found today');
@@ -82,7 +87,6 @@ function tweet(status) {
   }
 }
 
-// Open States Query constructor
 function createOpenStatesQuery(date, cursor = null) {
   var query = `
         {
@@ -110,10 +114,9 @@ function createOpenStatesQuery(date, cursor = null) {
             }
         }
     `;
-  return query;
+  return encodeURIComponent(query);
 }
 
-// Bill object constructor
 function createBillObject(data) {
   bill = {
     identifier: data.node.identifier,
@@ -125,33 +128,26 @@ function createBillObject(data) {
   return bill;
 }
 
-// AWS Lambda handler
 exports.handler = function(event, context, callback) {
   console.log(event);
   console.log(context);
   env = 'production';
-  getIt(url, openStatesQuery, []);
+  getIt(openStatesQuery, []);
   callback(null, 'Success from lambda');
 };
 
-// Test exports
-
-// Check that open states queries get created correctly
 exports.testCreateOpenStatesQuery = function(date, cursor) {
   return createOpenStatesQuery(date, cursor).raw;
 };
 
-// Check that bill objects get created correctly
 exports.testCreateBillObject = function(data) {
   return createBillObject(data);
 };
 
-// Check that startTweeting works
 exports.testStartTweeting = function(bills) {
   return startTweeting(bills, true);
 };
 
-// If we said to run it local, run it.
 if (process.argv[2] === 'local') {
-  getIt(url, openStatesQuery, []);
+  getIt(openStatesQuery, []);
 }

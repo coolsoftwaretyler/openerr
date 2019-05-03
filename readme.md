@@ -4,9 +4,9 @@
 
 Built by [Ogden Studios](https://ogdenstudios.xyz). The best way to support this project is by giving money to [Open States](https://openstates.org/).
 
-## Secrets
+## Credentials
 
-You'll need your own Open States API key, Twitter API credentials, and Gmail credentials to run the script correctly. If you're interested in collaborating. If you want to contribute to the project but can't get those credentials, let me know and we can figure something out.
+If you plan to deploy your own version or modification of Openerr, you'll need your own [Open States API key](https://openstates.org/api/register/) and [Twitter API credentials](https://developer.twitter.com/en/docs/basics/getting-started).
 
 ## Tests
 
@@ -16,13 +16,13 @@ This won't be helpful in troubleshooting Twitter API issues, but it might be use
 
 ## Deploying to AWS Lambda
 
-This script is meant to be packaged up and deployed to AWS Lambda. If you want to create the `.zip` file for deployment, run `npm run zip`.
+This script is meant to be packaged up and deployed to AWS Lambda. If you want to create the `.zip` file for deployment, run `npm run zip`. Current builds are larger than 10mb and should be uploaded to an S3 bucket for lambda deployment.
 
 ## Code style
 
-We use the `.editorconfig` and a modified `.eslintrc` from the [Node.js Style Guide](https://github.com/felixge/node-style-guide). The modified `.estlinrc` is only different in that it uses ES6.
+We use the `.editorconfig` and a modified `.eslintrc` from the [Node.js Style Guide](https://github.com/felixge/node-style-guide). The modified `.estlinrc` is only different in that it uses ES6. ESLint has been added to `npm run pretest`, so will fire before testing, or can be run on its own if you like.
 
-Running `npm pretest` will also run [Prettier](https://prettier.io/) with the correct settings to meet our ESLint config. This runs before `npm test` as well.
+You can run `npm run prettier` to run [Prettier](https://prettier.io/) with the correct settings to meet our ESLint config.
 
 ## Versioning
 
