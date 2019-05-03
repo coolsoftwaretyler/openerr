@@ -37,7 +37,6 @@ var sampleBillData = {
     openstatesUrl: 'https://openstates.org',
   },
 };
-
 var correctBillObject = {
   identifier: 'xxx-xxx-xxx',
   title: 'Correct bill object',
@@ -45,6 +44,41 @@ var correctBillObject = {
   latestActionDate: '2019-04-20',
   openstatesUrl: 'https://openstates.org',
 };
+
+var shortBill = {
+  identifier: '',
+  title: '',
+  latestActionDate: '',
+  latestAction: '',
+  openstatesUrl: '',
+};
+
+var truncatedBill = {
+  identifier: '',
+  title: '',
+  latestActionDate: '',
+  latestAction: '',
+  openstatesUrl:
+    'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec.',
+};
+
+var longBill = {
+  identifier: 'xxx-xxx-xxx',
+  title:
+    'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec.',
+  latestActionDate: '',
+  latestAction: '',
+  openstatesUrl:
+    'Lorem ipsum dolor sit amet, consectetuer adipiscing elit. Aenean commodo ligula eget dolor. Aenean massa. Cum sociis natoque penatibus et magnis dis parturient montes, nascetur ridiculus mus. Donec quam felis, ultricies nec, pellentesque eu, pretium quis, sem. Nulla consequat massa quis enim. Donec.',
+};
+
+var correctFullTweet = 'Colorado : . On , the following action was taken: .';
+
+var correctTruncatedTweet =
+  'Colorado : . On , the following action was taken: .';
+
+var correctDefaultTweet =
+  'There was action on Colorado xxx-xxx-xxx, but it was too long to tweet.';
 
 describe('Openerr', function() {
   describe('#createOpenStatesQuery()', function() {
@@ -93,6 +127,26 @@ describe('Openerr', function() {
         tooManyBills.push(correctBillObject);
       }
       assert.equal(openerr.testStartTweeting(tooManyBills).length, 700);
+    });
+  });
+  describe('#createTweetText()', function() {
+    it('should return full tweet if length < 280', function() {
+      assert.equal(
+        openerr.testCreateTweetText(shortBill).raw,
+        correctFullTweet.raw
+      );
+    });
+    it('should return tweetBody if tweetbody + readMore > 280 && tweetBody < 280', function() {
+      assert.equal(
+        openerr.testCreateTweetText(truncatedBill).raw,
+        correctTruncatedTweet.raw
+      );
+    });
+    it('should return default message if tweetBody > 280', function() {
+      assert.equal(
+        openerr.testCreateTweetText(longBill).raw,
+        correctDefaultTweet.raw
+      );
     });
   });
 });

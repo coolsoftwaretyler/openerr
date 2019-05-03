@@ -20,21 +20,21 @@ function getIt(query, bills) {
     host: url,
     path: `/graphql/?query=${query}`,
   };
-  var req = https.get(options, function(res) {
+  var req = https.get(options, function (res) {
     console.log('STATUS: ' + res.statusCode);
     console.log('HEADERS: ' + JSON.stringify(res.headers));
     var bodyChunks = [];
     res
-      .on('data', function(chunk) {
+      .on('data', function (chunk) {
         bodyChunks.push(chunk);
       })
-      .on('end', function() {
+      .on('end', function () {
         var body = Buffer.concat(bodyChunks);
         var parsedBody = JSON.parse(body);
         var hasNextPage = parsedBody.data.search.pageInfo.hasNextPage;
         var endCursor = parsedBody.data.search.pageInfo.endCursor;
         var responseData = parsedBody.data.search.edges;
-        for (i = 0; i < responseData.length; i++) {
+        for (i = 0;i < responseData.length;i++) {
           bill = createBillObject(responseData[i]);
           bills.push(bill);
         }
@@ -46,7 +46,7 @@ function getIt(query, bills) {
         }
       });
   });
-  req.on('error', function(e) {
+  req.on('error', function (e) {
     console.log('ERROR: ' + e.message);
   });
 }
@@ -56,13 +56,8 @@ function startTweeting(bills, testing = false) {
     console.log('No bills found today');
     return false;
   } else {
-    for (i = 0; i < bills.length; i++) {
-      var readMore = bills[i].openstatesUrl
-        ? 'Read more at: ' + bills[i].openstatesUrl.toString()
-        : '';
-      var tweetText = `Colorado ${bills[i].identifier}: ${bills[i].title}. On ${
-        bills[i].latestActionDate
-      }, the following action was taken: ${bills[i].latestAction}. ${readMore}`;
+    for (i = 0;i < bills.length;i++) {
+      var tweetText = createTweetText(bills[i]);
       if (testing) {
         return bills;
       } else {
@@ -80,10 +75,10 @@ function tweet(status) {
   if (env === 'production') {
     twitter
       .post('statuses/update', {status: status})
-      .then(function(tweet) {
+      .then(function (tweet) {
         console.log(tweet);
       })
-      .catch(function(error) {
+      .catch(function (error) {
         console.log(error);
       });
   } else {
@@ -95,8 +90,8 @@ function createOpenStatesQuery(date, cursor = null) {
   var query = `
         {
             search: bills(first:100, after:"${
-              cursor ? cursor : ''
-            }", jurisdiction: "Colorado", actionSince: "${date}") {
+    cursor ? cursor : ''
+    }", jurisdiction: "Colorado", actionSince: "${date}") {
                 edges {
                     node {
                         id,
@@ -132,7 +127,25 @@ function createBillObject(data) {
   return bill;
 }
 
-exports.handler = function(event, context, callback) {
+function createTweetText(bill) {
+  var tweetText = '';
+  var tweetBody = `Colorado ${bill.identifier}: ${bill.title}. On ${
+    bill.latestActionDate
+    }, the following action was taken: ${bill.latestAction}. `;
+  var readMore = bill.openstatesUrl
+    ? 'Read more at: ' + bill.openstatesUrl.toString()
+    : '';
+    if ((tweetBody + readMore).length <= 280) {
+      tweetText = tweetBody + readMore;
+    } else if (tweetBody.length <= 280) {
+      tweetText = tweetBody;
+    } else {
+      tweetText = `There was action on Colorado ${bill.identifier}, but it was too long to tweet.`;
+    }
+  return tweetText;
+}
+
+exports.handler = function (event, context, callback) {
   console.log(event);
   console.log(context);
   env = 'production';
@@ -140,16 +153,20 @@ exports.handler = function(event, context, callback) {
   callback(null, 'Success from lambda');
 };
 
-exports.testCreateOpenStatesQuery = function(date, cursor) {
+exports.testCreateOpenStatesQuery = function (date, cursor) {
   return createOpenStatesQuery(date, cursor).raw;
 };
 
-exports.testCreateBillObject = function(data) {
+exports.testCreateBillObject = function (data) {
   return createBillObject(data);
 };
 
-exports.testStartTweeting = function(bills) {
+exports.testStartTweeting = function (bills) {
   return startTweeting(bills, true);
+};
+
+exports.testCreateTweetText = function(bill) {
+  return createTweetText(bill);
 };
 
 if (process.argv[2] === 'local') {
