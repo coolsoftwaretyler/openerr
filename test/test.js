@@ -1,7 +1,7 @@
 var assert = require('assert');
 var openerr = require('../index');
 var correctOpenStatesQuery = `
-{ 
+{
     search: bills(first:100, after:"xxx6969xxx", jurisdiction: "Colorado", actionSince: "2019-04-20") {
         edges {
             node {
@@ -82,11 +82,17 @@ describe('Openerr', function() {
   });
   describe('#startTweeting()', function() {
     it('should return false when bills are empty', function() {
-      // We should receive an email about this as well
       assert.equal(openerr.testStartTweeting([]), false);
     });
     it('should return the bills when they are present', function() {
       assert.equal(openerr.testStartTweeting([correctBillObject]).length, 1);
+    });
+    it('should return with a too many bills message if there are 600+', function() {
+      var tooManyBills = [];
+      for (i = 0; i < 700; i++) {
+        tooManyBills.push(correctBillObject);
+      }
+      assert.equal(openerr.testStartTweeting(tooManyBills).length, 700);
     });
   });
 });
