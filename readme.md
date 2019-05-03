@@ -1,4 +1,4 @@
-# Colorado Openerr v0.1.0
+# Colorado Openerr v0.2.0
 
 [Colorado Openerr](https://twitter.com/openerr_co) uses the [Open States API](https://openstates.org/) to tweet about what is happening in Colorado state legislation.
 
@@ -26,4 +26,4 @@ You can run `npm run prettier` to run [Prettier](https://prettier.io/) with the 
 
 ## Versioning
 
-We use [semantic versioning](https://semver.org/).
+We use [semantic versioning](https://semver.org/). Check out `changelog.md` for notes about new versions as they're released.
