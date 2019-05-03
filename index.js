@@ -69,8 +69,9 @@ function startTweeting(bills, testing = false) {
         tweet(tweetText);
       }
     }
-    if (bills.length > 600) {
-      tweet('There were over 600 bills with activity yesterday, which exceeds our rate limit for tweeting. Please check https://openstates.org/co/ for more details');
+    if (bills.length > 300) {
+      tweet('There were over 300 bills with activity yesterday, which exceeds our rate limit for sending tweets. Please check https://openstates.org/co/ for more details');
+      return bills;
     }
   }
 }
