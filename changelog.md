@@ -1,3 +1,7 @@
+# 1.0.0
+
+Add link to blog post and increment version to `1.0.0`.
+
 # 0.2.2
 
 Add a function to construct tweet text and keep it within 280 characters.

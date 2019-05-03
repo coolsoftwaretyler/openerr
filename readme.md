@@ -1,8 +1,10 @@
-# Colorado Openerr v0.2.2
+# Colorado Openerr v1.0.0
 
 [Colorado Openerr](https://twitter.com/openerr_co) uses the [Open States API](https://openstates.org/) to tweet about what is happening in Colorado state legislation.
 
 Built by [Ogden Studios](https://ogdenstudios.xyz). The best way to support this project is by giving money to [Open States](https://openstates.org/).
+
+[Read about how and why this bot was made]().
 
 ## Credentials
 
