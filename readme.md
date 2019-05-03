@@ -27,3 +27,7 @@ You can run `npm run prettier` to run [Prettier](https://prettier.io/) with the 
 ## Versioning
 
 We use [semantic versioning](https://semver.org/). Check out `changelog.md` for notes about new versions as they're released.
+
+## License
+
+MIT Licensed. Check `LICENSE` for details.
