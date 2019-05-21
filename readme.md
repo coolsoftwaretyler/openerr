@@ -4,7 +4,7 @@
 
 Built by [Ogden Studios](https://ogdenstudios.xyz). The best way to support this project is by giving money to [Open States](https://openstates.org/).
 
-[Read about how and why this bot was made]().
+[Read about how and why this bot was made](https://ogdenstudios.xyz/2019/05/21/how-to-build-a-twitter-bot-with-aws-lambda.html).
 
 ## Credentials
 
