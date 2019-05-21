@@ -1,6 +1,6 @@
 {
   "name": "openerr",
-  "version": "0.2.3",
+  "version": "1.0.0",
   "description": "Colorado Openerr uses the Open States API to tweet about what is happening in Colorado state legislation.",
   "main": "index.js",
   "scripts": {
