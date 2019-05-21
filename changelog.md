@@ -2,6 +2,10 @@
 
 Add link to blog post and increment version to `1.0.0`.
 
+# 0.2.3
+
+Fix ratelimit handling. If there are over 300 bills, loop gets set to 299 tweets and starts by sending out the ratelimit message.
+
 # 0.2.2
 
 Add a function to construct tweet text and keep it within 280 characters.

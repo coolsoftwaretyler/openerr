@@ -52,21 +52,22 @@ function getIt(query, bills) {
 }
 
 function startTweeting(bills, testing = false) {
+  var limit = 0;
   if (bills.length === 0) {
     console.log('No bills found today');
     return false;
+  } else if (bills.length > 300) {
+    tweet('There were over 300 bills with activity yesterday, which exceeds our rate limit for sending tweets. Please check https://openstates.org/co/ for more details');
+    limit = 299;
   } else {
-    for (i = 0;i < bills.length;i++) {
-      var tweetText = createTweetText(bills[i]);
-      if (testing) {
-        return bills;
-      } else {
-        tweet(tweetText);
-      }
-    }
-    if (bills.length > 300) {
-      tweet('There were over 300 bills with activity yesterday, which exceeds our rate limit for sending tweets. Please check https://openstates.org/co/ for more details');
+    limit = bills.length;
+  }
+  for (i = 0;i < limit;i++) {
+    var tweetText = createTweetText(bills[i]);
+    if (testing) {
       return bills;
+    } else {
+      tweet(tweetText);
     }
   }
 }
