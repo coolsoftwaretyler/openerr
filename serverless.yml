@@ -1,0 +1,20 @@
+service: openerr
+
+provider:
+  name: aws
+  runtime: nodejs10.x
+  environment:
+    openStatesKey: ${file(./config.js):secrets.openStatesKey}
+    twitterToken: ${file(./config.js):secrets.twitterToken}
+    api_key: ${file(./config.js):secrets.api_key}
+    api_secret_key: ${file(./config.js):secrets.api_secret_key}
+    access_token: ${file(./config.js):secrets.access_token}
+    access_token_secret: ${file(./config.js):secrets.access_token_secret}
+
+functions:
+  startScraper:
+    handler: index.handler
+    memorySize: 512
+    timeout: 900
+    events:
+      - schedule: cron(0 10 * * ? *)
