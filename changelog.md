@@ -1,3 +1,7 @@
+# 1.1.0
+
+Convert to the [Serverless framework](https://serverless.com/).
+
 # 1.0.0
 
 Add link to blog post and increment version to `1.0.0`.
