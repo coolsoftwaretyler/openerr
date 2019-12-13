@@ -12,7 +12,7 @@ provider:
     access_token_secret: ${file(./config.js):secrets.access_token_secret}
 
 functions:
-  startScraper:
+  runOpenerr:
     handler: index.handler
     memorySize: 512
     timeout: 900

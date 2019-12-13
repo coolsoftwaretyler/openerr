@@ -4,19 +4,18 @@ var date = d.toISOString().split('T')[0];
 var env = 'test';
 var https = require('https');
 var openStatesQuery = createOpenStatesQuery(date);
-var secrets = require('./secrets.json');
 var Twitter = require('twitter');
 var twitter = new Twitter({
-  consumer_key: secrets.api_key,
-  consumer_secret: secrets.api_secret_key,
-  access_token_key: secrets.access_token,
-  access_token_secret: secrets.access_token_secret,
+  consumer_key: process.env.api_key,
+  consumer_secret: process.env.api_secret_key,
+  access_token_key: process.env.access_token,
+  access_token_secret: process.env.access_token_secret,
 });
 var url = 'openstates.org';
 
 function getIt(query, bills) {
   var options = {
-    headers: {'X-API-KEY': secrets.openStatesKey},
+    headers: {'X-API-KEY': process.env.openStatesKey},
     host: url,
     path: `/graphql/?query=${query}`,
   };
